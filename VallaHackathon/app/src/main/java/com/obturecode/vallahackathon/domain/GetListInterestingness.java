@@ -1,5 +1,6 @@
 package com.obturecode.vallahackathon.domain;
 
+import com.obturecode.vallahackathon.data.getInterestingnessPhotos;
 import com.obturecode.vallahackathon.domain.entity.Photo;
 
 import java.util.ArrayList;
@@ -14,10 +15,28 @@ public class GetListInterestingness {
     }
 
     private GetListInterestingnessDelegate delegate;
-
+    private getInterestingnessPhotos data;
     public void get(GetListInterestingnessDelegate delegate){
         this.delegate = delegate;
+        data = new getInterestingnessPhotos();
+
+        data.get(new getInterestingnessPhotos.getInterestingnessPhotosDelegate(){
+
+            @Override
+            public void InterestingnessPhotosResult(ArrayList<Photo> listPhotos) {
+                GetListInterestingness.this.delegate.GetListInterestingnessResult(listPhotos);
+            }
+
+            @Override
+            public void InterestingnessPhotosError() {
+                GetListInterestingness.this.delegate.GetListInterestingnessError();
+            }
+        }
+        );
 
     }
-    public void cancel(){}
+    public void cancel(){
+        data.cancel();
+        data= null;
+    }
 }
