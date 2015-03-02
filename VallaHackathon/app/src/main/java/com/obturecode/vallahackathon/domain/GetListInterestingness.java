@@ -23,12 +23,12 @@ public class GetListInterestingness {
         data.get(new getInterestingnessPhotos.getInterestingnessPhotosDelegate(){
 
             @Override
-            public void InterestingnessPhotosResult(ArrayList<Photo> listPhotos) {
+            public void interestingnessPhotosResult(ArrayList<Photo> listPhotos) {
                 GetListInterestingness.this.delegate.GetListInterestingnessResult(listPhotos);
             }
 
             @Override
-            public void InterestingnessPhotosError() {
+            public void interestingnessPhotosError() {
                 GetListInterestingness.this.delegate.GetListInterestingnessError();
             }
         }

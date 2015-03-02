@@ -15,6 +15,7 @@ public class Photo {
     private String isFamily;
     private Owner owner;
     private String description;
+    private Integer numComments;
 
     public String getId() {
         return id;
@@ -102,6 +103,14 @@ public class Photo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getNumComments() {
+        return numComments;
+    }
+
+    public void setNumComments(Integer numComments) {
+        this.numComments = numComments;
     }
 
     public String getUrl(){
