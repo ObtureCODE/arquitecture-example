@@ -83,10 +83,12 @@ public class getInterestingnessPhotos {
         }
 
         protected void onPostExecute(ArrayList<Photo> photos) {
-            if(photos==null)
-                getInterestingnessPhotos.this.delegate.interestingnessPhotosError();
-            else
-                getInterestingnessPhotos.this.delegate.interestingnessPhotosResult(photos);
+            if(getInterestingnessPhotos.this.delegate!=null) {
+                if (photos == null)
+                    getInterestingnessPhotos.this.delegate.interestingnessPhotosError();
+                else
+                    getInterestingnessPhotos.this.delegate.interestingnessPhotosResult(photos);
+            }
         }
     }
 

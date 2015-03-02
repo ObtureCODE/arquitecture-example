@@ -83,10 +83,12 @@ public class getInfoPhoto {
         }
 
         protected void onPostExecute(Photo photo) {
-            if(photo==null)
-                getInfoPhoto.this.delegate.infoPhotoError();
-            else
-                getInfoPhoto.this.delegate.infoPhotosResult(photo);
+            if(getInfoPhoto.this.delegate != null) {
+                if (photo == null)
+                    getInfoPhoto.this.delegate.infoPhotoError();
+                else
+                    getInfoPhoto.this.delegate.infoPhotosResult(photo);
+            }
         }
     }
 }

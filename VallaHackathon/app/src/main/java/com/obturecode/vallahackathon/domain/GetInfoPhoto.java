@@ -37,6 +37,10 @@ public class GetInfoPhoto {
         );
 
     }
+    public void cancel(){
+        data.cancel();
+        data= null;
+    }
 }
 
 

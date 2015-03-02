@@ -117,4 +117,8 @@ public class Photo {
         return "https://farm"+this.farm+".staticflickr.com/"+this.server+"/"+this.id+"_"+this.secret+".jpg";
     }
 
+    public String getThumb(){
+        return "https://farm"+this.farm+".staticflickr.com/"+this.server+"/"+this.id+"_"+this.secret+"_q.jpg";
+    }
+
 }
