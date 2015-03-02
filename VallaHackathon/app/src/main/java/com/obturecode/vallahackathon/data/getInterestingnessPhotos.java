@@ -1,6 +1,6 @@
 package com.obturecode.vallahackathon.data;
 
-import com.obturecode.vallahackathon.domain.Photo;
+import com.obturecode.vallahackathon.domain.entity.Photo;
 
 import java.util.ArrayList;
 

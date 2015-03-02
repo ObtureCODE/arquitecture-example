@@ -1,4 +1,4 @@
-package com.obturecode.vallahackathon.domain;
+package com.obturecode.vallahackathon.domain.entity;
 
 /**
  * Created by husky on 02/03/15.
