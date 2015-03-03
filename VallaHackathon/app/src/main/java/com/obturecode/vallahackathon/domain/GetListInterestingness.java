@@ -1,7 +1,11 @@
 package com.obturecode.vallahackathon.domain;
 
+import com.obturecode.vallahackathon.data.error.ParserError;
+import com.obturecode.vallahackathon.data.error.ResponseError;
 import com.obturecode.vallahackathon.data.getInterestingnessPhotos;
 import com.obturecode.vallahackathon.domain.entity.Photo;
+import com.obturecode.vallahackathon.domain.error.GenericError;
+import com.obturecode.vallahackathon.domain.error.InternetError;
 
 import java.util.ArrayList;
 
@@ -11,7 +15,7 @@ import java.util.ArrayList;
 public class GetListInterestingness {
     public interface GetListInterestingnessDelegate{
         public void GetListInterestingnessResult(ArrayList<Photo> listPhotos);
-        public void GetListInterestingnessError();
+        public void GetListInterestingnessError(Error e);
     }
 
     private GetListInterestingnessDelegate delegate;
@@ -28,8 +32,11 @@ public class GetListInterestingness {
             }
 
             @Override
-            public void interestingnessPhotosError() {
-                GetListInterestingness.this.delegate.GetListInterestingnessError();
+            public void interestingnessPhotosError(Error e) {
+                if(e instanceof ParserError || e instanceof ResponseError)
+                    GetListInterestingness.this.delegate.GetListInterestingnessError(new GenericError());
+                else
+                    GetListInterestingness.this.delegate.GetListInterestingnessError(new InternetError());
             }
         }
         );
