@@ -82,6 +82,6 @@ public class getExifPhoto {
     }
 
     private String getUrl(String idPhoto){
-        return "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key="+MyApplication.getFlickrApiKey()+"&photo_id="+idPhoto+"&format=rest";
+        return "https://api.flickr.com/services/rest/?method=flickr.photos.getExif&api_key="+MyApplication.getFlickrApiKey()+"&photo_id="+idPhoto+"&format=rest";
     }
 }

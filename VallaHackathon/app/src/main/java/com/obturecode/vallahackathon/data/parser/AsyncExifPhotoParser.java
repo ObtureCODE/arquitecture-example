@@ -76,7 +76,7 @@ public class AsyncExifPhotoParser extends AsyncTask<String, Void, Exif> {
                         exif.setAperture(xpp.nextText());
                     }
                     else if(xpp.getName().equalsIgnoreCase("raw") && parent!=null && parent.equalsIgnoreCase("ISO")){
-                        exif.setExposure(xpp.nextText());
+                        exif.setIso(xpp.nextText());
                     }
                     else if(xpp.getName().equalsIgnoreCase("raw") && parent!=null && parent.equalsIgnoreCase("Lens")){
                         exif.setLens(xpp.nextText());
