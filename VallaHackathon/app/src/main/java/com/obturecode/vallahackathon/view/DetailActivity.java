@@ -48,6 +48,7 @@ public class DetailActivity extends BaseActivity implements GetInfoPhoto.GetInfo
         ((TextView)findViewById(R.id.activity_detailTextISO)).setText(String.format(getString(R.string.text_ISO), photo.getExif().getIso()));
         ((TextView)findViewById(R.id.activity_detailTextFocalLenght)).setText(String.format(getString(R.string.text_aperture), photo.getExif().getFocalLength()));
         ((TextView)findViewById(R.id.activity_detailTextAperture)).setText(String.format(getString(R.string.text_focalLenght), photo.getExif().getAperture()));
+        ((TextView)findViewById(R.id.activity_detailTextMain)).setText(String.format(getString(R.string.text_main_photo), photo.getTitle(), photo.getOwnerName()));
         if(photo.getExif().getCamera() != null)
             ((TextView)findViewById(R.id.activity_detailTextCamera)).setText(String.format(getString(R.string.text_camera), photo.getExif().getCamera()));
         if(photo.getExif().getLens() != null)

@@ -3,7 +3,7 @@ package com.obturecode.vallahackathon.domain.entity;
 /**
  * Created by husky on 03/03/15.
  */
-public class qExif {
+public class Exif {
     private String lens;
     private String camera;
     private String aperture;
