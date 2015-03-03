@@ -1,5 +1,6 @@
 package com.obturecode.vallahackathon.domain;
 
+import com.obturecode.vallahackathon.data.error.ApiError;
 import com.obturecode.vallahackathon.data.error.ParserError;
 import com.obturecode.vallahackathon.data.error.ResponseError;
 import com.obturecode.vallahackathon.data.getExifPhoto;
@@ -7,6 +8,7 @@ import com.obturecode.vallahackathon.domain.entity.Exif;
 import com.obturecode.vallahackathon.domain.entity.Photo;
 import com.obturecode.vallahackathon.domain.error.GenericError;
 import com.obturecode.vallahackathon.domain.error.InternetError;
+import com.obturecode.vallahackathon.domain.error.PermissionErro;
 
 /**
  * Created by husky on 02/03/15.
@@ -38,6 +40,8 @@ public class GetInfoPhoto {
                     public void exifPhotoError(Error e) {
                         if(e instanceof ParserError || e instanceof ResponseError)
                             GetInfoPhoto.this.delegate.GetInfoPhotoError(new GenericError());
+                        else if(e instanceof ApiError)
+                            GetInfoPhoto.this.delegate.GetInfoPhotoError(new PermissionErro());
                         else
                             GetInfoPhoto.this.delegate.GetInfoPhotoError(new InternetError());
                     }

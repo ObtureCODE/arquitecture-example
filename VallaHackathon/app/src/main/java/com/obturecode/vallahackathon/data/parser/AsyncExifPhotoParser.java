@@ -2,6 +2,7 @@ package com.obturecode.vallahackathon.data.parser;
 
 import android.os.AsyncTask;
 
+import com.obturecode.vallahackathon.data.error.ApiError;
 import com.obturecode.vallahackathon.data.error.ParserError;
 import com.obturecode.vallahackathon.domain.entity.Exif;
 
@@ -15,7 +16,7 @@ import java.io.StringReader;
 /**
  * Created by husky on 02/03/15.
  */
-public class AsyncExifPhotoParser extends AsyncTask<String, Void, Exif> {
+public class AsyncExifPhotoParser extends AsyncTask<String, Void, Object> {
 
     public interface AsyncExifPhotoParserDelegate{
         public void AsyncExifPhotoParserResult(Exif exif);
@@ -28,7 +29,7 @@ public class AsyncExifPhotoParser extends AsyncTask<String, Void, Exif> {
         super();
         this.delegate = delegate;
     }
-    protected Exif doInBackground(String... params) {
+    protected Object doInBackground(String... params) {
         try {
             return this.parse(params[0]);
         } catch (XmlPullParserException e) {
@@ -40,16 +41,19 @@ public class AsyncExifPhotoParser extends AsyncTask<String, Void, Exif> {
         }
     }
 
-    protected void onPostExecute(Exif exif) {
+    protected void onPostExecute(Object exif) {
         if(!this.isCancelled()) {
             if (exif == null)
                 this.delegate.AsyncExifPhotoParserError(new ParserError());
             else
-                this.delegate.AsyncExifPhotoParserResult(exif);
+                if(exif instanceof Exif)
+                    this.delegate.AsyncExifPhotoParserResult((Exif)exif);
+                else
+                    this.delegate.AsyncExifPhotoParserError((ApiError)exif);
         }
     }
 
-    private Exif parse(String toParse) throws XmlPullParserException, IOException {
+    private Object parse(String toParse) throws XmlPullParserException, IOException {
 
 
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -83,6 +87,8 @@ public class AsyncExifPhotoParser extends AsyncTask<String, Void, Exif> {
                     }
                     else if(xpp.getName().equalsIgnoreCase("raw") && parent!=null && parent.equalsIgnoreCase("FocalLength")){
                         exif.setFocalLength(xpp.nextText());
+                    }else if(xpp.getName().equalsIgnoreCase("err")){
+                        return new ApiError(xpp.getAttributeValue(null, "msg"),xpp.getAttributeValue(null, "code"));
                     }
                     break;
 
