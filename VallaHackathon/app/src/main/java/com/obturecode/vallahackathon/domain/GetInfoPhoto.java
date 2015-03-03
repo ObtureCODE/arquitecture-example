@@ -1,10 +1,8 @@
 package com.obturecode.vallahackathon.domain;
 
-import com.obturecode.vallahackathon.data.getInfoPhoto;
-import com.obturecode.vallahackathon.data.getInterestingnessPhotos;
+import com.obturecode.vallahackathon.data.getExifPhoto;
+import com.obturecode.vallahackathon.domain.entity.Exif;
 import com.obturecode.vallahackathon.domain.entity.Photo;
-
-import java.util.ArrayList;
 
 /**
  * Created by husky on 02/03/15.
@@ -17,23 +15,26 @@ public class GetInfoPhoto {
     }
 
     private GetInfoPhotoDelegate delegate;
-    private getInfoPhoto data;
+    private getExifPhoto data;
+    private Photo photo;
 
     public void get(Photo photo, GetInfoPhotoDelegate delegate){
         this.delegate = delegate;
-        data = new getInfoPhoto();
+        this.photo = photo;
+        data = new getExifPhoto();
 
-        data.get(photo,new getInfoPhoto.getInfoPhotosDelegate(){
-                     @Override
-                     public void infoPhotosResult(Photo photo) {
-                         GetInfoPhoto.this.delegate.GetInfoPhotoResult(photo);
-                     }
+        data.get(photo,new getExifPhoto.getExifPhotoDelegate(){
+                    @Override
+                    public void exifPhotoResult(Exif exif) {
+                        GetInfoPhoto.this.photo.setExif(exif);
+                        GetInfoPhoto.this.delegate.GetInfoPhotoResult(GetInfoPhoto.this.photo);
+                    }
 
-                     @Override
-                     public void infoPhotoError() {
+                    @Override
+                    public void exifPhotoError(Error e) {
                         GetInfoPhoto.this.delegate.GetInfoPhotoError();
-                     }
-                 }
+                    }
+                }
         );
 
     }

@@ -1,7 +1,5 @@
 package com.obturecode.vallahackathon.data;
 
-import android.os.AsyncTask;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -9,12 +7,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.obturecode.vallahackathon.MyApplication;
-import com.obturecode.vallahackathon.data.parser.InterestingnessPhotosParser;
+import com.obturecode.vallahackathon.data.error.InternetError;
+import com.obturecode.vallahackathon.data.error.ResponseError;
+import com.obturecode.vallahackathon.data.parser.AsyncInterestingnessPhotosParser;
 import com.obturecode.vallahackathon.domain.entity.Photo;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -24,12 +20,13 @@ public class getInterestingnessPhotos {
 
     public interface getInterestingnessPhotosDelegate{
         public void interestingnessPhotosResult(ArrayList<Photo> listPhotos);
-        public void interestingnessPhotosError();
+        public void interestingnessPhotosError(Error e);
     }
 
     private static final String TAG = "InterestingnessPhotos";
     private RequestQueue queue;
     private getInterestingnessPhotosDelegate delegate;
+    private AsyncInterestingnessPhotosParser parser;
 
     public void get(getInterestingnessPhotosDelegate delegate){
         this.delegate = delegate;
@@ -45,7 +42,11 @@ public class getInterestingnessPhotos {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getInterestingnessPhotos.this.delegate.interestingnessPhotosError();
+                        if(error.networkResponse != null) {
+                            getInterestingnessPhotos.this.delegate.interestingnessPhotosError(new ResponseError(error.networkResponse.statusCode));
+                        }else {
+                            getInterestingnessPhotos.this.delegate.interestingnessPhotosError(new InternetError());
+                        }
                     }
                 }
         );
@@ -58,38 +59,29 @@ public class getInterestingnessPhotos {
         if (queue != null) {
             queue.cancelAll(TAG);
         }
+        if(parser!=null)
+            parser.cancel(true);
+
         this.delegate = null;
     }
 
     private void onResponse(String response){
-        new AsyncParser().execute(response);
+        parser = new AsyncInterestingnessPhotosParser(new AsyncInterestingnessPhotosParser.AsyncInterestingnessPhotosParserDelegate() {
+            @Override
+            public void AsyncInterestingnessPhotosParserResult(ArrayList<Photo> photos) {
+                getInterestingnessPhotos.this.delegate.interestingnessPhotosResult(photos);
+            }
+
+            @Override
+            public void AsyncInterestingnessPhotosParserError(Error e) {
+                getInterestingnessPhotos.this.delegate.interestingnessPhotosError(e);
+            }
+        });
+        parser.execute(response);
     }
 
     private String getUrl(){
-        return "https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key="+MyApplication.getFlickrApiKey()+"&format=rest";
-    }
-
-    private class AsyncParser extends AsyncTask<String, Void, ArrayList<Photo>> {
-        protected ArrayList<Photo> doInBackground(String... params) {
-            try {
-                return InterestingnessPhotosParser.parse(params[0]);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        protected void onPostExecute(ArrayList<Photo> photos) {
-            if(getInterestingnessPhotos.this.delegate!=null) {
-                if (photos == null)
-                    getInterestingnessPhotos.this.delegate.interestingnessPhotosError();
-                else
-                    getInterestingnessPhotos.this.delegate.interestingnessPhotosResult(photos);
-            }
-        }
+        return "https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&extras=owner_name%2C+description&api_key="+MyApplication.getFlickrApiKey()+"&format=rest";
     }
 
 }
