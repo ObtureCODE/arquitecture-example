@@ -9,50 +9,51 @@ import com.android.volley.toolbox.Volley;
 import com.obturecode.vallahackathon.MyApplication;
 import com.obturecode.vallahackathon.data.error.InternetError;
 import com.obturecode.vallahackathon.data.error.ResponseError;
-import com.obturecode.vallahackathon.data.parser.AsyncInterestingnessPhotosParser;
+import com.obturecode.vallahackathon.data.parser.AsyncExifPhotoParser;
+import com.obturecode.vallahackathon.domain.entity.Exif;
 import com.obturecode.vallahackathon.domain.entity.Photo;
-import java.util.ArrayList;
+
+
 
 /**
  * Created by husky on 02/03/15.
  */
-public class getInterestingnessPhotos {
+public class getExifPhoto {
 
-    public interface getInterestingnessPhotosDelegate{
-        public void interestingnessPhotosResult(ArrayList<Photo> listPhotos);
-        public void interestingnessPhotosError(Error e);
+    public interface getExifPhotoDelegate{
+        public void exifPhotoResult(Exif exif);
+        public void exifPhotoError(Error e);
     }
 
     private static final String TAG = "InterestingnessPhotos";
     private RequestQueue queue;
-    private getInterestingnessPhotosDelegate delegate;
-    private AsyncInterestingnessPhotosParser parser;
+    private getExifPhotoDelegate delegate;
+    private AsyncExifPhotoParser parser;
 
-    public void get(getInterestingnessPhotosDelegate delegate){
+    public void get(Photo photo,getExifPhotoDelegate delegate){
         this.delegate = delegate;
         queue = Volley.newRequestQueue(MyApplication.getAppContext());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.getUrl(),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, this.getUrl(photo.getId()),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        getInterestingnessPhotos.this.onResponse(response);
+                        getExifPhoto.this.onResponse(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error.networkResponse != null) {
-                            getInterestingnessPhotos.this.delegate.interestingnessPhotosError(new ResponseError(error.networkResponse.statusCode));
+                            getExifPhoto.this.delegate.exifPhotoError(new ResponseError(error.networkResponse.statusCode));
                         }else {
-                            getInterestingnessPhotos.this.delegate.interestingnessPhotosError(new InternetError());
+                            getExifPhoto.this.delegate.exifPhotoError(new InternetError());
                         }
                     }
                 }
         );
         stringRequest.setTag(TAG);
         queue.add(stringRequest);
-
     }
 
     public void cancel(){
@@ -61,29 +62,26 @@ public class getInterestingnessPhotos {
         }
         if(parser!=null)
             parser.cancel(true);
-
         this.delegate = null;
     }
 
     private void onResponse(String response){
-        parser = new AsyncInterestingnessPhotosParser(new AsyncInterestingnessPhotosParser.AsyncInterestingnessPhotosParserDelegate() {
+        parser = new AsyncExifPhotoParser(new AsyncExifPhotoParser.AsyncExifPhotoParserDelegate() {
             @Override
-            public void AsyncInterestingnessPhotosParserResult(ArrayList<Photo> photos) {
-                getInterestingnessPhotos.this.delegate.interestingnessPhotosResult(photos);
+            public void AsyncExifPhotoParserResult(Exif exif) {
+                getExifPhoto.this.delegate.exifPhotoResult(exif);
             }
 
             @Override
-            public void AsyncInterestingnessPhotosParserError(Error e) {
-                getInterestingnessPhotos.this.delegate.interestingnessPhotosError(e);
+            public void AsyncExifPhotoParserError(Error e) {
+                getExifPhoto.this.delegate.exifPhotoError(e);
             }
         });
+
         parser.execute(response);
     }
 
-    private String getUrl(){
-        return "https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&extras=owner_name%2C+description&api_key="+MyApplication.getFlickrApiKey()+"&format=rest";
+    private String getUrl(String idPhoto){
+        return "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key="+MyApplication.getFlickrApiKey()+"&photo_id="+idPhoto+"&format=rest";
     }
-
 }
-
-

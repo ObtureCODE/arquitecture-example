@@ -13,8 +13,10 @@ public class Photo {
     private String isFriend;
     private String isPublic;
     private String isFamily;
-    private Owner owner;
+    private String ownerName;
     private String description;
+    private Integer numComments;
+    private Exif exif;
 
     public String getId() {
         return id;
@@ -88,12 +90,12 @@ public class Photo {
         this.isFamily = isFamily;
     }
 
-    public Owner getOwner() {
-        return owner;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     public String getDescription() {
@@ -104,8 +106,28 @@ public class Photo {
         this.description = description;
     }
 
+    public Integer getNumComments() {
+        return numComments;
+    }
+
+    public void setNumComments(Integer numComments) {
+        this.numComments = numComments;
+    }
+
+    public Exif getExif() {
+        return exif;
+    }
+
+    public void setExif(Exif exif) {
+        this.exif = exif;
+    }
+
     public String getUrl(){
         return "https://farm"+this.farm+".staticflickr.com/"+this.server+"/"+this.id+"_"+this.secret+".jpg";
+    }
+
+    public String getThumb(){
+        return "https://farm"+this.farm+".staticflickr.com/"+this.server+"/"+this.id+"_"+this.secret+"_q.jpg";
     }
 
 }
