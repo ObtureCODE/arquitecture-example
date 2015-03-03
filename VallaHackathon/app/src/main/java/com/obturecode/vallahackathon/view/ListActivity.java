@@ -54,6 +54,7 @@ public class ListActivity extends BaseActivity implements GetListInterestingness
 
     public void GetListInterestingnessError(Error error){
         hideSpinner();
+        showError(error);
     }
 
     @Override

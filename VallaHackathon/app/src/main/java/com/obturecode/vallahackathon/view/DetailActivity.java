@@ -64,6 +64,7 @@ public class DetailActivity extends BaseActivity implements GetInfoPhoto.GetInfo
     @Override
     public void GetInfoPhotoError(Error e) {
         hideSpinner();
-
+        showError(e);
+        finish();
     }
 }

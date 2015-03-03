@@ -8,4 +8,7 @@
     <string name="text_camera">Cámara %s</string>
     <string name="text_lens">Objetivo %s</string>
     <string name="text_main_photo">%1$s de %2$s</string>
+    <string name="error_generic">Opps, parece que ha habido un error</string>
+    <string name="error_internet">Opps, parece que no tienes conexión a Internet</string>
+    <string name="error_permission">No tienes permiso para ver detalle de esta foto :(</string>
 </resources>

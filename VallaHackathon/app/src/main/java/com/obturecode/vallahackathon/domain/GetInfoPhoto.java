@@ -8,7 +8,7 @@ import com.obturecode.vallahackathon.domain.entity.Exif;
 import com.obturecode.vallahackathon.domain.entity.Photo;
 import com.obturecode.vallahackathon.domain.error.GenericError;
 import com.obturecode.vallahackathon.domain.error.InternetError;
-import com.obturecode.vallahackathon.domain.error.PermissionErro;
+import com.obturecode.vallahackathon.domain.error.PermissionError;
 
 /**
  * Created by husky on 02/03/15.
@@ -41,7 +41,7 @@ public class GetInfoPhoto {
                         if(e instanceof ParserError || e instanceof ResponseError)
                             GetInfoPhoto.this.delegate.GetInfoPhotoError(new GenericError());
                         else if(e instanceof ApiError)
-                            GetInfoPhoto.this.delegate.GetInfoPhotoError(new PermissionErro());
+                            GetInfoPhoto.this.delegate.GetInfoPhotoError(new PermissionError());
                         else
                             GetInfoPhoto.this.delegate.GetInfoPhotoError(new InternetError());
                     }
