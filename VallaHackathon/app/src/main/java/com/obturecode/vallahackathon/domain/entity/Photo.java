@@ -1,9 +1,11 @@
 package com.obturecode.vallahackathon.domain.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by husky on 02/03/15.
  */
-public class Photo {
+public class Photo implements Serializable {
     private String id;
     private String ownerId;
     private String secret;

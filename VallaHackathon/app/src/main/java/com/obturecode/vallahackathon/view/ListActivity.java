@@ -1,39 +1,65 @@
-package com.obturecode.vallahackathon;
+package com.obturecode.vallahackathon.view;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.obturecode.vallahackathon.R;
+import com.obturecode.vallahackathon.domain.GetListInterestingness;
+import com.obturecode.vallahackathon.domain.entity.Photo;
+import com.obturecode.vallahackathon.view.adapters.PhotoAdapter;
+
+import java.util.ArrayList;
 
 
-public class ListActivity extends ActionBarActivity {
+public class ListActivity extends BaseActivity implements GetListInterestingness.GetListInterestingnessDelegate, AdapterView.OnItemClickListener {
+
+    PhotoAdapter photoAdapter;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        initAdapter();
+        initView();
+        getData();
     }
 
+    private void initView(){
+        listView = (ListView) findViewById(R.id.activity_listList);
+        listView.setOnItemClickListener(this);
+        listView.setAdapter(photoAdapter);
+    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list, menu);
-        return true;
+    private void initAdapter(){
+        photoAdapter = new PhotoAdapter(this);
+    }
+
+    private void getData(){
+        showSpinner();
+        GetListInterestingness modelGetListInterestingness = new GetListInterestingness();
+        modelGetListInterestingness.get(this);
+    }
+
+    public void GetListInterestingnessResult(ArrayList<Photo> listPhotos){
+        hideSpinner();
+        photoAdapter.addAll(listPhotos);
+    }
+
+    public void GetListInterestingnessError(Error error){
+        hideSpinner();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent detailActivityIntent = new Intent(this, DetailActivity.class);
+        detailActivityIntent.putExtra(DetailActivity.PARAM_PHOTO_ENTITY, photoAdapter.getItem(position));
+        startActivity(detailActivityIntent);
     }
 }
